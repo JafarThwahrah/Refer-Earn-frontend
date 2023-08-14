@@ -8,7 +8,8 @@ const Register = () => {
   const params = useParams();
   console.log(params.id);
   const [formValues, setFormValues] = useState({
-    referrer_id: params.id ? params.id : false,
+    referrer_id: params.id ? params.id : "",
+    is_referred: params.id ? true : false,
     name: "",
     email: "",
     password: "",
@@ -36,7 +37,8 @@ const Register = () => {
       formData.append("password", formValues.password);
       formData.append("phone", formValues.phone);
       formData.append("birth_date", formValues.birth_date);
-      formData.append("referrer_id", formValues.referred_id);
+      formData.append("referrer_id", formValues.referrer_id);
+      formData.append("is_referred", formValues.is_referred);
       formData.append("image", formValues.image);
       const response = await axios.post(REGISTER_URL, formData, {
         headers: {
