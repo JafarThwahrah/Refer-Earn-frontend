@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
-const LOGIN_URL = "/auth/login/password";
+const LOGIN_URL = "/auth/login";
 
 const Login = () => {
   const [formValues, setFormValues] = useState({});
@@ -52,12 +52,12 @@ const Login = () => {
         <div className="mb-3">
           <h3 className="mb-5 text-center">Login</h3>
           <label htmlFor="name" className="form-label">
-            Username
+            Email
           </label>
           <input
             className="form-control"
-            id="name"
-            name="name"
+            id="email"
+            name="email"
             aria-describedby="emailHelp"
             onChange={handleChange}
           />

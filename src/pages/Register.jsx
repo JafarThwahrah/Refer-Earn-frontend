@@ -1,15 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
-const REGISTER_URL = "/register";
+const REGISTER_URL = "auth/register";
 
 const Register = () => {
   const [errMsg, setErrMsg] = useState({});
   const params = useParams();
-  console.log(params.id);
   const [formValues, setFormValues] = useState({
-    referrer_id: params.id ? params.id : "",
-    is_referred: params.id ? true : false,
+    referrer_id: params.id ? params.id : null,
     name: "",
     email: "",
     password: "",
@@ -17,6 +15,28 @@ const Register = () => {
     birth_date: "",
     image: "",
   });
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    if (params.id) {
+      (async () => {
+        try {
+          const response = await axios.get(`clicks/add-clicks/${params.id}`, {
+            signal: abortController.signal,
+          });
+        } catch (error) {
+          if (!abortController.signal.aborted) {
+            console.log(error);
+          }
+        }
+      })();
+    }
+
+    return () => {
+      abortController.abort();
+    };
+  }, [params.id]);
 
   const handleChange = (event) => {
     if (event.target.name === "image") {
@@ -45,8 +65,6 @@ const Register = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      console.log(response);
     } catch (err) {
       console.log(err);
       if (!err?.response) {
