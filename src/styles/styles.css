@@ -1,0 +1,25 @@
+.card {
+  width: 15rem;
+  height: 12rem;
+}
+.image_style {
+  width: 3rem;
+  border-radius: 50%;
+}
+
+.line_chart_container {
+  height: 30rem;
+}
+
+.tree_profile {
+  height: 90vh;
+}
+
+.vertical-tree {
+  width: 100vw;
+  height: 100vh;
+}
+
+.tree_profile {
+  /* margin-left: 20rem; */
+}

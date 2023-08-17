@@ -25,10 +25,11 @@ const Login = () => {
     try {
       const response = await axios.post(LOGIN_URL, formValues);
       if (response.status == 200) {
-        // navigate("/profile");
-        console.log(response);
-        setCookie("sessionId", `${response.data.sessionId}`, 1);
+        const accessToken = response.data.data.access_token;
+        setCookie("accessToken", accessToken, 1);
+        navigate("/profile");
       }
+      location.reload();
     } catch (err) {
       console.log(err);
       if (!err?.response) {
@@ -42,7 +43,6 @@ const Login = () => {
       }
     }
   };
-  console.log(formValues);
   return (
     <div className="d-flex justify-content-center items-center vh-100">
       <form

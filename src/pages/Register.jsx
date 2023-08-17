@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 const REGISTER_URL = "auth/register";
 
 const Register = () => {
   const [errMsg, setErrMsg] = useState({});
   const params = useParams();
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     referrer_id: params.id ? params.id : null,
     name: "",
@@ -37,7 +38,14 @@ const Register = () => {
       abortController.abort();
     };
   }, [params.id]);
-
+  function setCookie(name, value, days) {
+    const expires = new Date(
+      Date.now() + days * 24 * 60 * 60 * 1000
+    ).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(
+      value
+    )}; expires=${expires}; path=/`;
+  }
   const handleChange = (event) => {
     if (event.target.name === "image") {
       setFormValues({
@@ -65,6 +73,10 @@ const Register = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      const accessToken = response.data.data.access_token;
+      setCookie("accessToken", accessToken, 1);
+      location.reload();
+      navigate("/profile");
     } catch (err) {
       console.log(err);
       if (!err?.response) {
@@ -76,8 +88,6 @@ const Register = () => {
       }
     }
   };
-  console.log(formValues);
-  console.log(errMsg);
 
   return (
     <div className="d-flex justify-content-center items-center p-5">
@@ -171,7 +181,7 @@ const Register = () => {
           />
         </div>
 
-        <a className="text-decoration-none mb-4" href="/login">
+        <a className="text-decoration-none mb-4" href="/">
           Do you have an account?
         </a>
 
