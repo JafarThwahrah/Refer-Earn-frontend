@@ -28,10 +28,10 @@ function UserProfile() {
           points_per_day: response.data.data.points_per_day,
           user_name: response.data.data.user_name,
           user_image: response.data.data.user_image,
+          level: response.data.data.level,
         });
       } catch (error) {
         if (!abortController.signal.aborted) {
-          console.log(error);
         }
       }
     })();
@@ -41,7 +41,6 @@ function UserProfile() {
       abortController.abort();
     };
   }, []);
-  console.log(userData);
   return (
     <>
       <div className="d-flex flex-column">
@@ -50,8 +49,9 @@ function UserProfile() {
             <div className="card text-bg-light m-3">
               <div className="card-body">
                 <img className="image_style" src={userData.user_image} alt="" />
+                <h6>{userData.level}</h6>
                 <h5 className="card-title">{userData.user_name}</h5>
-                <p className="card-text">
+                <p className="card-text link_style">
                   Referral Link : {userData.referral_link}
                 </p>
               </div>

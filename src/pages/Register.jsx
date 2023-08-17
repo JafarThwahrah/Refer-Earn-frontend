@@ -75,8 +75,8 @@ const Register = () => {
       });
       const accessToken = response.data.data.access_token;
       setCookie("accessToken", accessToken, 1);
-      location.reload();
       navigate("/profile");
+      location.reload();
     } catch (err) {
       console.log(err);
       if (!err?.response) {

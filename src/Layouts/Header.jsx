@@ -3,28 +3,30 @@ import Cookies from "js-cookie";
 import axios from "../api/axios";
 const Header = () => {
   const [userData, setUserData] = useState({});
+  const [accessToken, setAccessToken] = useState(Cookies.get("accessToken"));
+
   useEffect(() => {
     const abortController = new AbortController();
     (async () => {
       try {
         const accessToken = Cookies.get("accessToken");
-        const response = await axios.get(`profile/user-profile`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          signal: abortController.signal,
-        });
-
-        setUserData({
-          total_views: response.data.data.total_views,
-          unique_views: response.data.data.unique_views,
-          total_points: response.data.data.total_points,
-          referral_link: response.data.data.referral_link,
-          points_per_day: response.data.data.points_per_day,
-          user_name: response.data.data.user_name,
-          user_image: response.data.data.user_image,
-          is_admin: response.data.data.is_admin,
-        });
+        if (accessToken) {
+          const response = await axios.get(`profile/user-profile`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setUserData({
+            total_views: response.data.data.total_views,
+            unique_views: response.data.data.unique_views,
+            total_points: response.data.data.total_points,
+            referral_link: response.data.data.referral_link,
+            points_per_day: response.data.data.points_per_day,
+            user_name: response.data.data.user_name,
+            user_image: response.data.data.user_image,
+            is_admin: response.data.data.is_admin,
+          });
+        }
       } catch (error) {
         if (!abortController.signal.aborted) {
         }
@@ -32,10 +34,9 @@ const Header = () => {
     })();
     // Clean up the abort controller
     return () => {
-      abortController.abort();
+      // abortController.abort();
     };
-  }, []);
-
+  }, [accessToken]);
   const handleLogout = async () => {
     try {
       const accessToken = Cookies.get("accessToken");
@@ -65,7 +66,7 @@ const Header = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {userData.is_admin && (
+              {userData.is_admin ? (
                 <>
                   <li className="nav-item">
                     <a
@@ -86,10 +87,12 @@ const Header = () => {
                     </a>
                   </li>
                 </>
+              ) : (
+                ""
               )}
             </ul>
             <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-end w-100">
-              {userData.user_name && (
+              {accessToken && (
                 <>
                   <li className="nav-item">
                     <a
@@ -111,7 +114,7 @@ const Header = () => {
                   </li>
                 </>
               )}
-              {userData.user_name ? (
+              {accessToken ? (
                 <li className="nav-item">
                   <a
                     onClick={handleLogout}

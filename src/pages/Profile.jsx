@@ -7,12 +7,10 @@ const Profile = () => {
         const response = await axios.get("/users/profile", {
           withCredentials: true,
         });
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getSingleUser();
+    location.reload();
   }, []);
 
   return <div>Profile</div>;
