@@ -34,10 +34,10 @@ const Login = () => {
       console.log(err);
       if (!err?.response) {
         setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
+      } else if (err.response?.status === 400 || err.response?.status === 422) {
         setErrMsg("Missing Username or Password");
       } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg("Invalid Credentials");
       } else {
         setErrMsg("Login Failed");
       }
@@ -51,6 +51,8 @@ const Login = () => {
       >
         <div className="mb-3">
           <h3 className="mb-5 text-center">Login</h3>
+          <p className="text-danger text-center">{errMsg}</p>
+
           <label htmlFor="name" className="form-label">
             Email
           </label>

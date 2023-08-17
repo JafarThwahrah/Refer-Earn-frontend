@@ -32,7 +32,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function AdminPage() {
   const [rows, setRows] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-
+  const [sortColumn, setSortColumn] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
   const handleSearchClick = async () => {
     try {
       const accessToken = Cookies.get("accessToken");
@@ -44,11 +45,8 @@ export default function AdminPage() {
           name: searchInput,
         },
       });
-      console.log(response);
       setRows(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -62,17 +60,39 @@ export default function AdminPage() {
           },
           signal: abortController.signal,
         });
-        setRows(response.data.data);
+
+        const sortedData = response.data.data.slice().sort((a, b) => {
+          const aValue = a[sortColumn];
+          const bValue = b[sortColumn];
+
+          if (typeof aValue === "number" && typeof bValue === "number") {
+            return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+          } else {
+            return sortDirection === "asc"
+              ? String(aValue).localeCompare(String(bValue))
+              : String(bValue).localeCompare(String(aValue));
+          }
+        });
+
+        setRows(sortedData);
       } catch (error) {
-        console.log(error);
         if (!abortController.signal.aborted) {
         }
       }
     })();
+
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [sortColumn, sortDirection]);
+  const handleSortClick = (column) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
 
   return (
     <>
@@ -108,16 +128,58 @@ export default function AdminPage() {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">Name</StyledTableCell>
-              <StyledTableCell align="center">Email&nbsp;</StyledTableCell>
-              <StyledTableCell align="center">
+              <StyledTableCell
+                align="center"
+                onClick={() => handleSortClick("name")}
+              >
+                Name&nbsp;
+                {sortColumn === "name" && sortDirection === "asc" && "↑"}
+                {sortColumn === "name" && sortDirection === "desc" && "↓"}
+              </StyledTableCell>
+              <StyledTableCell
+                align="center"
+                onClick={() => handleSortClick("email")}
+              >
+                Email&nbsp;
+                {sortColumn === "email" && sortDirection === "asc" && "↑"}
+                {sortColumn === "email" && sortDirection === "desc" && "↓"}
+              </StyledTableCell>
+              <StyledTableCell
+                align="center"
+                onClick={() => handleSortClick("registration_date")}
+              >
                 Registration Date&nbsp;
+                {sortColumn === "registration_date" &&
+                  sortDirection === "asc" &&
+                  "↑"}
+                {sortColumn === "registration_date" &&
+                  sortDirection === "desc" &&
+                  "↓"}
               </StyledTableCell>
-              <StyledTableCell align="center">
+
+              <StyledTableCell
+                align="center"
+                onClick={() => handleSortClick("total_points")}
+              >
                 Total Points&nbsp;
+                {sortColumn === "total_points" &&
+                  sortDirection === "asc" &&
+                  "↑"}
+                {sortColumn === "total_points" &&
+                  sortDirection === "desc" &&
+                  "↓"}
               </StyledTableCell>
-              <StyledTableCell align="center">
+              <StyledTableCell
+                align="center"
+                onClick={() => handleSortClick("num_of_referred_users")}
+              >
                 Number of Referreds users&nbsp;
+                {sortColumn === "num_of_referred_users" &&
+                  sortDirection === "asc" &&
+                  "↑"}
+                {sortColumn === "num_of_referred_users" &&
+                  sortDirection === "desc" &&
+                  "↓"}
               </StyledTableCell>
             </TableRow>
           </TableHead>
