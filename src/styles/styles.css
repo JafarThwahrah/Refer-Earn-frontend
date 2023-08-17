@@ -27,3 +27,19 @@
 .link_style {
   font-size: 0.8rem;
 }
+
+.family-tree-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  margin-top: 2rem;
+}
+
+.rdt_Node circle {
+  fill: #8884d8;
+}
+
+.rdt_Link path {
+  stroke: #8884d8;
+}

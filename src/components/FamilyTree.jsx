@@ -12,10 +12,10 @@ const FamilyTree = ({ familyTreeData }) => {
   const formattedTreeData = renderTree(familyTreeData);
 
   return (
-    <div className="vertical-tree">
+    <div className="family-tree-container">
       <Tree
         data={formattedTreeData}
-        translate={{ x: 200, y: 50 }}
+        translate={{ x: 500, y: 35 }}
         orientation="vertical"
       />
     </div>
